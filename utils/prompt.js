@@ -1,7 +1,7 @@
 const readMePrompt = (githubUrl) => {
   return `
     Generate a ReadMe for the GitHub repository at ${githubUrl} in markdown format.
-    Use the (package.json - .gitignore) files and commits from the repository as references for the ReadMe content (if available).
+    Use the (package.json and Dependencies - .gitignore - actual code) files and commits from the repository as references for the ReadMe content (if available).
 
     including a summary of the repository, its purpose, and any additional relevant information,
     stack used, features, and instructions on how to install and use the project. You may also include sections
