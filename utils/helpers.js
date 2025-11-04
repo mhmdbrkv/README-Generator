@@ -38,7 +38,7 @@ function cleanMarkdownResponse(text) {
     .trim();
 
   // Remove any remaining code block wrappers
-  cleaned = cleaned.replace(/^```[\w]*\n?|\n?```$/g, "").trim();
+  //   cleaned = cleaned.replace(/^```[\w]*\n?|\n?```$/g, "").trim();
 
   return cleaned;
 }
