@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub ReadMe Generator</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+
+      .container {
+        max-width: 900px;
+        width: 100%;
+      }
+
+      h1 {
+        color: white;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 1.5rem;
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-icon {
+        font-size: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        color: #2d3748;
+      }
+
+      .github-form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+      }
+
+      input[type="url"] {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
+
+      input[type="url"]:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      code {
+        background: #f7fafc;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+      }
+
+      .button-group {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      button {
+        flex: 1;
+        padding: 0.875rem;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: background 0.3s, transform 0.1s;
+      }
+
+      button:hover {
+        background: #5568d3;
+      }
+
+      button:active {
+        transform: scale(0.98);
+      }
+
+      button:disabled {
+        background: #cbd5e0;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      button.secondary {
+        background: #48bb78;
+      }
+
+      button.secondary:hover {
+        background: #38a169;
+      }
+
+      .status {
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .status.info {
+        background: #ebf8ff;
+        color: #2c5282;
+        border: 1px solid #bee3f8;
+      }
+
+      .status.success {
+        background: #f0fff4;
+        color: #22543d;
+        border: 1px solid #9ae6b4;
+      }
+
+      .status.error {
+        background: #fff5f5;
+        color: #742a2a;
+        border: 1px solid #feb2b2;
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .preview-card {
+        display: none;
+      }
+
+      .preview-card.visible {
+        display: block;
+      }
+
+      .preview-content {
+        background: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        max-height: 500px;
+        overflow-y: auto;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      .preview-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📘 GitHub ReadMe Generator</h1>
+
+      <div class="card" id="githubCard">
+        <div class="card-header">
+          <span class="card-icon">🔗</span>
+          <h2 class="card-title">From GitHub</h2>
+        </div>
+
+        <form id="githubForm" class="github-form">
+          <label for="githubUrl">GitHub repository URL</label>
+          <div style="margin: 0.5rem 0 1rem">
+            <input
+              type="url"
+              id="githubUrl"
+              name="githubUrl"
+              placeholder="https://github.com/owner/repo"
+              aria-describedby="githubHelp"
+              required
+            />
+            <div
+              id="githubHelp"
+              style="font-size: 0.85rem; color: #718096; margin-top: 0.5rem"
+            >
+              Enter a public GitHub repository URL (for example:
+              <code>https://github.com/owner/repo</code>).
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="submitGithub" type="submit">
+              <span>🔍</span>
+              <span>Generate README</span>
+            </button>
+          </div>
+
+          <div id="githubStatus"></div>
+        </form>
+      </div>
+
+      <div class="card preview-card" id="previewCard">
+        <div class="card-header">
+          <span class="card-icon">👁️</span>
+          <h2 class="card-title">Generated README Preview</h2>
+        </div>
+
+        <div class="preview-content" id="previewContent"></div>
+
+        <div class="preview-actions">
+          <button id="copyBtn" class="secondary">
+            <span>📋</span>
+            <span>Copy to Clipboard</span>
+          </button>
+          <button id="downloadBtn" class="secondary">
+            <span>💾</span>
+            <span>Download README.md</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("githubForm");
+      const submitBtn = document.getElementById("submitGithub");
+      const statusDiv = document.getElementById("githubStatus");
+      const previewCard = document.getElementById("previewCard");
+      const previewContent = document.getElementById("previewContent");
+      const copyBtn = document.getElementById("copyBtn");
+      const downloadBtn = document.getElementById("downloadBtn");
+      const githubUrlInput = document.getElementById("githubUrl");
+
+      let generatedContent = "";
+
+      // Validate GitHub URL
+      function isValidGithubUrl(url) {
+        try {
+          const parsed = new URL(url);
+          return (
+            parsed.hostname === "github.com" &&
+            parsed.pathname.split("/").filter(Boolean).length >= 2
+          );
+        } catch {
+          return false;
+        }
+      }
+
+      // Show status message
+      function showStatus(message, type = "info") {
+        statusDiv.innerHTML = message;
+        statusDiv.className = `status ${type}`;
+      }
+
+      // Set loading state
+      function setLoading(isLoading) {
+        submitBtn.disabled = isLoading;
+        githubUrlInput.disabled = isLoading;
+
+        if (isLoading) {
+          submitBtn.innerHTML =
+            '<span class="spinner"></span><span>Generating...</span>';
+        } else {
+          submitBtn.innerHTML = "<span>🔍</span><span>Generate README</span>";
+        }
+      }
+
+      // Handle form submission
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const githubUrl = githubUrlInput.value.trim();
+
+        // Validate URL
+        if (!isValidGithubUrl(githubUrl)) {
+          showStatus("❌ Please enter a valid GitHub repository URL", "error");
+          return;
+        }
+
+        setLoading(true);
+        previewCard.classList.remove("visible");
+        showStatus("🔄 Generating README...", "info");
+
+        try {
+          const response = await fetch("/ai/generate-readMe", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ githubUrl }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || "Failed to generate README");
+          }
+
+          // Store the generated content
+          generatedContent = data.content || "";
+
+          // Show preview
+          previewContent.textContent = generatedContent;
+          previewCard.classList.add("visible");
+
+          showStatus(
+            `✅ README generated successfully! File: ${data.fileName}`,
+            "success"
+          );
+
+          // Scroll to preview
+          previewCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } catch (error) {
+          console.error("Error:", error);
+          showStatus(`❌ Error: ${error.message}`, "error");
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      // Copy to clipboard
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(generatedContent);
+          const originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = "<span>✓</span><span>Copied!</span>";
+          setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+          }, 2000);
+        } catch (error) {
+          alert("Failed to copy to clipboard");
+        }
+      });
+
+      // Download as file
+      downloadBtn.addEventListener("click", () => {
+        const blob = new Blob([generatedContent], { type: "text/markdown" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "README.md";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
+</html>
